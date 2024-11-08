@@ -69,11 +69,60 @@
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user)
+                alert("Your account has been created!");
             }) 
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+            });
+        }
+
+        const userSignIn = async () => {
+            const signInEMail = userEmail.value;
+            const signInPassword = userPassword.value;
+            signInWithEmailAndPassword(auth, signInEMail, signInPassword)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                alert("You have signed in successfully!");
+            }) 
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorCode, errorMessage);
+            });
+        }
+
+        const checkAuthState = async() => {
+            onAuthStateChanged(auth, user => {
+                if (user) {
+                    // User is signed in
+                    secretContent.style.display = "block";
+                    authForm.style.display = "none";
+                } else {
+                    // User is signed out
+                    secretContent.style.display = "none";
+                    authForm.style.display = "block";
+                }
+            });
+        }
+
+        const userSignOut = async () => {
+            await signOut(auth)
+            .then(() => {
+                alert("You have signed out successfully!");
+            })
+            .catch((error) => {
+                console.log(error);
+            });
         }
 
 
+        checkAuthState();
 
+        signUpButton.addEventListener("click", userSignUp);
+        signInButton.addEventListener("click", userSignIn);
+        signOutButton.addEventListener("click", userSignOut);
       </script>
 </body>
 </html>
